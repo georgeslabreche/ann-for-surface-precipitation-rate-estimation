@@ -11,7 +11,7 @@ The Area of Interest (AOI) is the Ionian Sea, as shown in Figure 1:
 **Figure 1: The area of interest for this experiment is the Ionian Sea.**
 
 ## Resources
-- [ECMWF MOOC Machine Learning in Weatther and Climate](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate/blob/main/tier_3/observations/mooc_tier3_1_ml_sat_panegrossi_v5.ipynb).
+- [ECMWF MOOC Machine Learning in Weather and Climate](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate/blob/main/tier_3/observations/mooc_tier3_1_ml_sat_panegrossi_v5.ipynb).
 - [File Specification for GPM Products](https://gpm.nasa.gov/resources/documents/file-specification-gpm-products).
 - [NASA PPS Storm website](https://storm.pps.eosdis.nasa.gov/storm/) to access the GPM products.
 
@@ -25,7 +25,7 @@ pip install virtualenv
 virtualenv venv
 ```
 
-Activate the environment in Linux:
+Activate the virtual environment in Linux:
 ```bash
 source venv/bin/activate
 ```
@@ -40,17 +40,13 @@ Install the application's Python package dependencies:
 pip install -r requirements.txt
 ```
 
-Run the application
-```bash
-python train.py
-```
-
 Deactivate the environment:
 ```bash
 deactivate
 ```
 
 ### Execution
+Activate the virtual environment and execute the Python code. 
 
 Download the data products:
 ```bash
