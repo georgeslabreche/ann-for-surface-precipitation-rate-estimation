@@ -13,7 +13,7 @@ Note that the models trained in this project use a small training dataset of 10 
 The goals of this projects are to:
 1. Familiarize with the [Global Precipitation Measurement Mission (GPM)](https://gpm.nasa.gov/missions/GPM) and the specification of its data products.
 2. Understand the properties of the [GPM Microwave Imager (GMI)](https://gpm.nasa.gov/missions/GPM/GMI) channel frequencies and how to inrepret them into weather characteristics. For instance, at a central frequency of 36.5 GHz the Brightness Temperature (TB) measurements that are colder than background stem from the scattering by large and dense ice (e.g. hail – deep convection) [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
-3. Understand how adding or removing some GMI channels from the training dataset affect the model's predictions. For instance, the channels at a central frequency of 10.65 GHz are more directly impacted by surface precipitation where a TB warmer than background indicates emissions from large raindrops that are present in the lower rain layers.
+3. Understand how adding or removing some GMI channels from the training dataset affect the model's predictions. For instance, by removing or only considering the channels at a central frequency of 10.65 GHz since they are more directly impacted by surface precipitation where a TB warmer than background indicates emissions from large raindrops that are present in the lower rain layers [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
 4. Appreciate the complexities of precipitation retrieval over land and how they hinder our ability to train a neural network for weather and climate predictions over land.
 
 ## Area of Interest
@@ -32,6 +32,9 @@ The AOI over land is TBD. It will probably be over the Balkans in order to favor
 **Figure 2: Area of interest over TBD.**
 
 ## Mapped Data Products
+Map the measurements taken by GPM to better understand the distribution of measurements across the entire AOI.
+
+### Brightness Temperature (TB)
 
 ![Figure 3: Vertically polarized GMI TB measurements over the Ionian Sea (September 16, 2020).](./figures/fig3_aoi_sea_gmi_v.png)
 
@@ -40,6 +43,12 @@ The AOI over land is TBD. It will probably be over the Balkans in order to favor
 ![Figure 4: Horizontally polarized GMI TB measurements over the Ionian Sea (September 16, 2020).](./figures/fig4_aoi_sea_gmi_h.png)
 
 **Figure 4: Horizontally polarized GMI TB measurements over the Ionian Sea (September 16, 2020).**
+
+### Surface Precipitation (Rainfall Rate)
+
+![Figure 5: Surface preciptation (rainfall rate) over the Ionian Sea (September 16, 2020).](./figures/fig5_aoi_sea_rr.png)
+
+**Figure 5: Surface preciptation (rainfall rate) over the Ionian Sea (September 16, 2020).**
 
 ## References
 [1] [ECMWF MOOC Machine Learning in Weather and Climate](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate).
@@ -55,7 +64,7 @@ The AOI over land is TBD. It will probably be over the Balkans in order to favor
 [6] [GPM GPROF Algorithm Theoretical Basis Document (ATBD)](https://gpm.nasa.gov/resources/documents/gpm-gprof-algorithm-theoretical-basis-document-atbd).
 
 ## Appendix: Getting Started
-Instruction on how to prepare the virtual environment and install the Python package dependencies.
+Instructions on how to prepare the virtual environment and install the Python package dependencies.
 
 ### Installation
 Install the virtual environment:

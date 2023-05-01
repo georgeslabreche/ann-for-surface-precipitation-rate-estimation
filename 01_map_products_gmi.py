@@ -1,95 +1,10 @@
+#!/usr/bin/env python
 
 import h5py
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
-import warnings
 
 from constants import *
-
-'''
-Use Basemap to visualize brightness temperature (TB) products into maps.
-'''
-
-# a function to plot TB data
-def plot_tb(TB, lat, lon, lat_bounds, lon_bounds, colorAxisMin, colorAxisMax):
-
-  # the basemap bounding
-  # resolution: use 'h' for high or 'f' for full (much slower render time)
-  m = Basemap(projection = 'merc',
-    resolution = 'l',
-    lat_ts = 20,
-    llcrnrlat = lat_bounds[0],
-    urcrnrlat = lat_bounds[1],
-    llcrnrlon = lon_bounds[0],
-    urcrnrlon = lon_bounds[1])
-
-  # set min/max values of the colorbar
-  with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    im1 = m.pcolor(lon[:], lat[:] ,TB[:],
-    shading = 'nearest',
-    cmap = 'turbo',
-    latlon = True,
-    vmin = colorAxisMin,
-    vmax = colorAxisMax)
-
-  # draw the coast lines
-  m.drawcoastlines()
-
-  # set parallels and meridians
-  dparal = 2 #separation in deg between drawn parallels
-  parallels = np.arange(lat_bounds[0], lat_bounds[1], dparal)
-  dmerid = 2 #separation in deg between drawn meridians
-  meridians = np.arange(lon_bounds[0], lon_bounds[1], dmerid)
-  m.drawparallels(parallels, labels=[1,0,0,0], fontsize=15)
-  m.drawmeridians(meridians, labels=[0,0,0,1], fontsize=15)
-
-  # add colorbar.
-  cbar = m.colorbar(location='right', pad="5%")
-  cbar.set_label('Kelvin (K)') # temperature in Kelvin
-
-
-# a function that loop through a list of TB data for each channel and plot the data into a map
-def plot_tb_all(TBs, show=True, filepath=None):
-  ''' loop through TB data for each channel and plot the data into a map.
-  '''
-
-  # create a figure to draw the data into a map plot
-  fig = plt.figure(figsize=(24, 10))
-
-  # draw the plots as subplots
-  subplot_index = 1
-
-  for TB in TBs:
-    # plot location
-    ax = fig.add_subplot(2, 3, subplot_index)
-
-    # check that TB data is given
-    if TB:
-      # draw the plot for the TB at the given channel
-      plot_tb(TB[1], lat_S1, lon_S1, LAT_BOUNDS_IONIAN_SEA, LON_BOUNDS_IONIAN_SEA, colorAxisMin=130, colorAxisMax=300)
-
-      # plot title
-      plt.title(TB[0])
-
-    else:
-      # draw empty plot if no TB data for the channel
-      plt.axis('off')
-
-    # increment index for the placement of the next subplot
-    subplot_index += 1
-
-  # write the plots into an image file
-  if filepath:
-    plt.savefig(
-      f'{filepath}',
-      bbox_inches='tight',
-      dpi = 300)
-
-  # show the plots!
-  if show: plt.show()
-
+from plot_utils import plot_tb, plot_tb_all
 
 # read the TB data
 # properties of the six GMI frequencies are determined by whether the TB measurement is warmer or colder than the background
@@ -99,7 +14,7 @@ gmi_tb_file_path = f'{DATA_DIR}/{DATA_FILENAME_TB}'
 
 # open the data file
 # todo: apply a filter to only keep data with the lat and lon values that are within the area interest
-# don't do it for this first experiment because we want to play with different areas of interest
+#       don't do it for this first experiment because we want to play with different areas of interest
 hf = h5py.File(gmi_tb_file_path,'r')
 
 # fetch TB data from Swath S1
@@ -178,11 +93,23 @@ TBs_H = [
 # plot all the TBs!
 # todo: optimize the processing time to render these plots
 plot_tb_all(TBs_V,
-  show=True,
-  #filepath='figures/fig3_aoi_sea_gmi_v.png'
+  lat = lat_S1,
+  lon = lon_S1,
+  lat_bounds = LAT_BOUNDS_IONIAN_SEA,
+  lon_bounds = LON_BOUNDS_IONIAN_SEA,
+  colorAxisMin = 130,
+  colorAxisMax = 300,
+  #show = False,
+  #filepath = 'figures/fig3_aoi_sea_gmi_v.png'
 )
 
 plot_tb_all(TBs_H,
-  show=False,
-  #filepath='figures/fig4_aoi_sea_gmi_h.png'
+  lat = lat_S1,
+  lon = lon_S1,
+  lat_bounds = LAT_BOUNDS_IONIAN_SEA,
+  lon_bounds = LON_BOUNDS_IONIAN_SEA,
+  colorAxisMin = 130,
+  colorAxisMax = 300,
+  #show = False,
+  #filepath = 'figures/fig4_aoi_sea_gmi_h.png'
 )
