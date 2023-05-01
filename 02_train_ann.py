@@ -140,11 +140,11 @@ def train():
   # Adam is a standard choice, but Scale conjugate gradient (SGD), is also very efficient.
   optimizer = optimizers.Adam(lr=learning_rate)
   #optimizer = optimizers.experimental.SGD(learning_rate=learning_rate1)
-  
+
   # here the model optimzer and the loss function to be minimized during training (mean squared error, MSE) are defined
   # the mean absolute error (mae) is also computed as additional metrics
-  model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['mae']) 
-  
+  model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['mae'])
+
   # the training dataset, the batch size and the number of epochs to be used re defined
   # validation is also carried out
   # monitoring loss and metrics on the test dataset
@@ -162,7 +162,7 @@ def train():
   # retuurn the mode and history
   return model, history
 
-# for trainig with CPU (Slower) uncomment next line.
+# for trainig with CPU (Slower)
 model, history = train() 
 
 # for trainig with GPU (Faster) uncomment next 2 lines.

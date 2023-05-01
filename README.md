@@ -40,13 +40,13 @@ Install the application's Python package dependencies:
 pip install -r requirements.txt
 ```
 
-Deactivate the environment:
+Deactivate the virtual environment:
 ```bash
 deactivate
 ```
 
 ### Execution
-Activate the virtual environment and execute the Python code. 
+Activate the virtual environment and execute the Python code.
 
 Download the data products:
 ```bash
