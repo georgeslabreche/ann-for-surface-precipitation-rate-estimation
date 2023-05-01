@@ -4,11 +4,16 @@ DATA_FILENAME_TB = '1C-R.GPM.GMI.XCAL2016-C.20200916-S130832-E144106.037225.V07A
 # data types 2A correspond to Precipitation
 DATA_FILENAME_PRECIPITATION = '2A.GPM.GMI.GPROF2021v1.20200916-S130832-E144106.037225.V07A.HDF5'
 
+# data used for training
+# training data: 13 channels for Brightness Temperature (TB) measurement
+# target labels: the surface rain rates (RR)
+DATA_FILENAME_GMI_DPR_RR = 'dataset2_GMI_DPR_RR.nc'
+
 # urls of the data
 DATA_URLS = [
   f'https://get.ecmwf.int/repository/mooc-machine-learning-weather-climate/tier_3/observations/{DATA_FILENAME_TB}',
   f'https://get.ecmwf.int/repository/mooc-machine-learning-weather-climate/tier_3/observations/{DATA_FILENAME_PRECIPITATION}',
-  'https://get.ecmwf.int/repository/mooc-machine-learning-weather-climate/tier_3/observations/dataset2_GMI_DPR_RR.nc'
+  f'https://get.ecmwf.int/repository/mooc-machine-learning-weather-climate/tier_3/observations/{DATA_FILENAME_GMI_DPR_RR}'
 ]
 
 # the data directory path relative to the project home folder
