@@ -17,12 +17,12 @@ warnings.filterwarnings("ignore")
 from constants import *
 
 '''
-train a Multilayer Perceptrons (MLP) Neural Network model
-the model predicts the surface rain rate (RR) given a set 13 channels for Brightness Temperature (TB) measurements
-the model represents a simple Neural Network (NN) with two hidden layers and a final layer which is used to predict the target label.
+Train a Multilayer Perceptrons (MLP) Neural Network model
+  - The model predicts the surface rain rate (RR) given a set 13 channels for Brightness Temperature (TB) measurements
+  - The model represents a simple Neural Network (NN) with two hidden layers and a final layer which is used to predict the target label.
 
-the comments that explains the process in this source code are taken from:
-https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate/blob/main/tier_3/observations/mooc_tier3_1_ml_sat_panegrossi_v5.ipynb
+The comments that explains the process in this source code are taken from:
+https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate
 
 The dataset used for training and test of the NN is built from 10 GMI orbits (from 9th March 2014):
   - The 13 features correspond exactly to the 13 GMI channels.
@@ -36,6 +36,7 @@ https://gpm.nasa.gov/resources/documents/gpmdpr-level-2-algorithm-theoretical-ba
 The GMI TBs and the DPR rainfall rates (from 2B-CMB) have been matched to build the dataset using a nearest neighbour approach.
 Only pixels over ocean and sea where rainfall has been observed (2B-CMB rainfall rate > 0 mm/h) are selected to build the dataset (for a total of 61,906 pixels).
 
+The training dataset is built from 10 orbits of March 2014.
 '''
 
 # the models directory
@@ -46,6 +47,7 @@ if not os.path.exists(MODELS_DIR):
   os.makedirs(MODELS_DIR)
 
 # path of the nc data file with training data (TBs) and target labels (surface rain rates)
+# the training dataset is built from 10 orbits of March 2014
 data_filepath = f'{DATA_DIR}/{DATA_FILENAME_GMI_DPR_RR}'
 
 # read the dataset

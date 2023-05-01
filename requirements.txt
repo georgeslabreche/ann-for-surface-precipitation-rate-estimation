@@ -1,5 +1,6 @@
 wget==3.2
 basemap==1.3.6
+basemap-data-hires==1.3.2
 h5py==3.8.0
 pandas==2.0.1
 xarray==2023.4.2
