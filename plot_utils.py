@@ -84,7 +84,7 @@ def plot_tb_all(TBs, lat, lon, lat_bounds, lon_bounds, colorAxisMin, colorAxisMa
   if show: plt.show()
 
 
-def plot_rr(RR, lat, lon, lat_bounds, lon_bounds, colorAxisMin, colorAxisMax, show=True, filepath=None):
+def plot_rr(RR, lat, lon, lat_bounds, lon_bounds, colorAxisMin, colorAxisMax, title="Surface Precipitation", show=True, filepath=None):
   ''' Use Basemap to visualize rainfall rates (surface precipitation) products on a map.'''
 
   fig = plt.figure()
@@ -126,7 +126,28 @@ def plot_rr(RR, lat, lon, lat_bounds, lon_bounds, colorAxisMin, colorAxisMax, sh
   cbar.set_label('Rainfall Rate [mm/h]')
 
   # add title
-  plt.title('Surface Precipitation', fontsize=12)
+  plt.title(title, fontsize=12)
+
+  # write the plots into an image file
+  if filepath:
+    plt.savefig(
+      f'{filepath}',
+      bbox_inches='tight',
+      dpi = 300)
+
+  # show the plots!
+  if show: plt.show()
+
+
+def plot_learning_curves(history, show=True, filepath=None):
+  ''' Plot the training's learning curve. '''
+
+  plt.title('Learning Curves')
+  plt.xlabel('Epoch')
+  plt.ylabel('MSE loss')
+  plt.plot((history.history['loss']), label='train')
+  plt.plot((history.history['val_loss']), label='test')
+  plt.legend()
 
   # write the plots into an image file
   if filepath:

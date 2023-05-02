@@ -17,6 +17,7 @@ from sklearn.preprocessing import StandardScaler
 warnings.filterwarnings("ignore")
 
 from constants import *
+from plot_utils import plot_learning_curves
 
 '''
 Train a Multilayer Perceptrons (MLP) Neural Network model
@@ -41,33 +42,22 @@ Only pixels over ocean and sea where rainfall has been observed (2B-CMB rainfall
 The training dataset is built from 10 orbits of March 2014.
 '''
 
-# the models directory
-MODELS_DIR = "models"
+# the model hyperparameters
+
+# the learning rate is the step size at each iteration while moving toward a minimum of a loss function
+LEARNING_RATE = 0.001
+
+# an epoch in machine learning means one complete pass of the training dataset through the algorithm
+EPOCHS = 1600
+
+# the batch size is the number of training examples utilized in one iteration
+# a large batch size should make the training faster but may lead to memory saturation
+BATCH_SIZE = 8000
 
 # Create the models directory if it doesn't exist
 if not os.path.exists(MODELS_DIR):
   os.makedirs(MODELS_DIR)
 
-# path of the nc data file with training data (TBs) and target labels (surface rain rates)
-# the training dataset is built from 10 orbits of March 2014
-data_filepath = f'{DATA_DIR}/{DATA_FILENAME_GMI_DPR_RR}'
-
-# read the dataset
-ds = xr.open_dataset(data_filepath)
-
-# the training data (the TBs)
-train_df = ds['tb'].to_dataframe().unstack()
-
-# the target labels (the surface rain rate)
-target = ds['rr'].to_dataframe()
-
-# that amount of data that we're dealing with
-print('The shape of the TB features data is', train_df.shape)
-print('The shape of the surface rain rate label data is', target.shape)
-
-# conver the dataframes into tensors
-tensor_df = tf.convert_to_tensor(train_df, dtype=np.float)
-label_df = tf.convert_to_tensor(target, dtype=np.float)
 
 # splitting the dataset
 def split_dataset(dataset, label_dataset):
@@ -85,37 +75,6 @@ def split_dataset(dataset, label_dataset):
 
   # return the split dataset
   return X_train, X_test, y_train, y_test
-
-X_train, X_test, y_train, y_test = split_dataset(tensor_df, label_df)
-
-# scaling: standardize features by removing the mean and scaling to unit variance
-scaler = StandardScaler()
-
-# mean and variance are calculated on the training dataset and applied to the training dataset
-X_train_scaled = scaler.fit_transform(X_train)
-
-# mean and variance (previously calculated) are applied to the test dataset
-X_test_scaled = scaler.transform(X_test)
-
-# print the result of splitting the dataset
-print('The shape of the training dataset is', X_train.shape)
-print('The shape of the test dataset is', X_test.shape)
-
-# the model hyperparameters
-
-# the learning rate is the step size at each iteration while moving toward a minimum of a loss function
-learning_rate = 0.001
-
-# an epoch in machine learning means one complete pass of the training dataset through the algorithm
-epochs = 1600
-
-# the batch size is the number of training examples utilized in one iteration
-# a large batch size should make the training faster but may lead to memory saturation
-batch_size = 8000
-
-# Set the input shape
-input_shape = X_train.shape[1]
-print(f'Feature shape, i.e. number of TB channels: {input_shape}')
 
 
 # training phase with the training dataset
@@ -142,8 +101,8 @@ def train():
 
   # the optimizer is the algorithm used for the training.
   # Adam is a standard choice, but Scale conjugate gradient (SGD), is also very efficient.
-  optimizer = optimizers.Adam(lr=learning_rate)
-  #optimizer = optimizers.experimental.SGD(learning_rate=learning_rate1)
+  optimizer = optimizers.Adam(lr=LEARNING_RATE)
+  #optimizer = optimizers.experimental.SGD(learning_rate=LEARNING_RATE1)
 
   # here the model optimzer and the loss function to be minimized during training (mean squared error, MSE) are defined
   # the mean absolute error (mae) is also computed as additional metrics
@@ -156,28 +115,66 @@ def train():
   history = model.fit(
     X_train_scaled,
     y_train,
-    batch_size=batch_size,
-    epochs=epochs,
-    validation_data=(X_test_scaled, y_test),)
+    batch_size = BATCH_SIZE,
+    epochs = EPOCHS,
+    validation_data = (X_test_scaled, y_test),)
 
   # the model is saved at the end of the training phase in an HFD5 output file
-  model.save(f'{MODELS_DIR}/mlp_model.h5') 
+  model.save(f'{MODELS_DIR}/{MODEL_FILENAME}')
 
   # retuurn the mode and history
   return model, history
 
+
+# path of the nc data file with training data (TBs) and target labels (surface rain rates)
+# the training dataset is built from 10 orbits of March 2014
+data_filepath = f'{DATA_DIR}/{DATA_FILENAME_GMI_DPR_RR}'
+
+# read the dataset
+ds = xr.open_dataset(data_filepath)
+
+# the training data (the TBs)
+train_df = ds['tb'].to_dataframe().unstack()
+
+# the target labels (the surface rain rate)
+target = ds['rr'].to_dataframe()
+
+# that amount of data that we're dealing with
+print('The shape of the TB features data is', train_df.shape)
+print('The shape of the surface rain rate label data is', target.shape)
+
+# conver the dataframes into tensors
+tensor_df = tf.convert_to_tensor(train_df, dtype=np.float)
+label_df = tf.convert_to_tensor(target, dtype=np.float)
+
+X_train, X_test, y_train, y_test = split_dataset(tensor_df, label_df)
+
+# scaling: standardize features by removing the mean and scaling to unit variance
+scaler = StandardScaler()
+
+# mean and variance are calculated on the training dataset and applied to the training dataset
+X_train_scaled = scaler.fit_transform(X_train)
+
+# mean and variance (previously calculated) are applied to the test dataset
+X_test_scaled = scaler.transform(X_test)
+
+# print the result of splitting the dataset
+print('The shape of the training dataset is', X_train.shape)
+print('The shape of the test dataset is', X_test.shape)
+
+# set the input shape
+input_shape = X_train.shape[1]
+print(f'Feature shape, i.e. number of TB channels: {input_shape}')
+
 # for trainig with CPU (Slower)
-model, history = train() 
+model, history = train()
 
 # for trainig with GPU (Faster) uncomment next 2 lines.
 #with tf.device("/device:GPU:0"):
 #  model, history = train()
 
-# plot learning curves
-plt.title('Learning Curves')
-plt.xlabel('Epoch')
-plt.ylabel('MSE loss')
-plt.plot((history.history['loss']), label='train')
-plt.plot((history.history['val_loss']), label='test')
-plt.legend()
-plt.show()
+# plot the training's learning curve
+plot_learning_curves(history,
+  #show = False,
+  #filepath = "figures/fig6_ann_sea_learning_curves.png"
+)

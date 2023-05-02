@@ -33,6 +33,7 @@ plot_rr(
   lon_bounds = LON_BOUNDS_IONIAN_SEA,
   colorAxisMin = 0,
   colorAxisMax = 40,
+  title = "Estimated Rainfall Rate",
   #show = False,
   #filepath = "figures/fig5_aoi_sea_rr.png"
 )

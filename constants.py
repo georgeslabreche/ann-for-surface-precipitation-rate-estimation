@@ -26,6 +26,12 @@ DATA_URLS = [
 # the data directory path relative to the project home folder
 DATA_DIR = "data"
 
+# the models directory
+MODELS_DIR = "models"
+
+# the model filename
+MODEL_FILENAME = 'mlp_model.h5'
+
 # lat and lon bounding box bounds for the Ionian Sea on 16/09/2020
 # this are is of interest becasue it captures the Mediterranean Hurricane (Medicane)
 # over the Ionian Sea between Southern Italy and Greece

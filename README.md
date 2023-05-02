@@ -12,7 +12,7 @@ Note that the models trained in this project use a small training dataset of 10 
 
 The goals of this projects are to:
 1. Familiarize with the [Global Precipitation Measurement Mission (GPM)](https://gpm.nasa.gov/missions/GPM) and the specification of its data products.
-2. Understand the properties of the [GPM Microwave Imager (GMI)](https://gpm.nasa.gov/missions/GPM/GMI) channel frequencies and how to inrepret them into weather characteristics. For instance, at a central frequency of 36.5 GHz the Brightness Temperature (TB) measurements that are colder than background stem from the scattering by large and dense ice (e.g. hail – deep convection) [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
+2. Understand the properties of the [GPM Microwave Imager (GMI)](https://gpm.nasa.gov/missions/GPM/GMI) channel frequencies and how to inrepret them into weather characteristics. For instance, at a central frequency of 36.5 GHz the TB measurements that are colder than background stem from the scattering by large and dense ice (e.g. hail – deep convection) [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
 3. Understand how adding or removing some GMI channels from the training dataset affect the model's predictions. For instance, by removing or only considering the channels at a central frequency of 10.65 GHz since they are more directly impacted by surface precipitation where a TB warmer than background indicates emissions from large raindrops that are present in the lower rain layers [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
 4. Appreciate the complexities of precipitation retrieval over land and how they hinder our ability to train a neural network for weather and climate predictions over land.
 
@@ -20,21 +20,21 @@ The goals of this projects are to:
 Two areas of interest (AOI) are selected to experiment with ANN for precipitation rate estimation over sea and land. The AOI over sea is taken from [[1](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate)]. The area over land is TBD.
 
 ### Over Sea
-The AOI over sea is the Ionian Sea, as shown in Figure 1:
+The AOI over sea is the Ionian Sea, as shown in Figure 1. A model will be trained to estimate the surface precipitation that occured during [Cyclone Ianos](https://en.wikipedia.org/wiki/Cyclone_Ianos), a.k.a Medicane Ianos.
 
 ![Figure 1: Area of interest over the Ionian Sea.](./figures/fig1_aoi_ionian_sea.png)
 
 **Figure 1: Area of interest over the Ionian Sea.**
 
 ### Over Land
-The AOI over land is TBD. It will probably be over the Balkans in order to favor a study over Europe that has not benefited as much from past research.
+The AOI over land will be an area in the path of Hurricane Ida's landfall. A model will be trained to estimate the surface precipitation during the hurricane in order to evaluate the challenges of predicting rainfall rate over land.
 
-**Figure 2: Area of interest over TBD.**
+**Figure 2: TBD.**
 
 ## Mapped Data Products
-Map the measurements taken by GPM to better understand the distribution of measurements across the entire AOI.
+Map the measurements taken by the GPM to better understand the data and its distribution across the entire AOI for both TB and surface precipitation measurements. The dataset was collected during Medicane Ianos, which occured on September 16, 2020. This dataset will not be used to train the model but will be used to compare against and evaluate the model's surface precipitation estimations given the same GMI inputs. The training data is taken from 10 GMI orbits on March 9, 2014.
 
-### Brightness Temperature (TB)
+### Brightness Temperature
 
 ![Figure 3: Vertically polarized GMI TB measurements over the Ionian Sea (September 16, 2020).](./figures/fig3_aoi_sea_gmi_v.png)
 
@@ -45,10 +45,31 @@ Map the measurements taken by GPM to better understand the distribution of measu
 **Figure 4: Horizontally polarized GMI TB measurements over the Ionian Sea (September 16, 2020).**
 
 ### Surface Precipitation (Rainfall Rate)
+The surface precipitation during the Medicane Iano, shown in Figure 5, is what the model will attempt to estimate. The mapped values are taken from the NASA GMI/DPR Level 2 precipitation product (2B-CMB). Refer to [[6](https://gpm.nasa.gov/resources/documents/gpm-gprof-algorithm-theoretical-basis-document-atbd)] for details on the 2B-CMB algorithm used to determine the rainfall rate. These measurements will serve as the target values used to evaluate the model estimates given GMI TB inputs for the same day (mapped in Figures 3 and 4).
 
-![Figure 5: Surface preciptation (rainfall rate) over the Ionian Sea (September 16, 2020).](./figures/fig5_aoi_sea_rr.png)
+![Figure 5: Surface precipitation (rainfall rate) over the Ionian Sea (September 16, 2020).](./figures/fig5_aoi_sea_rr.png)
 
-**Figure 5: Surface preciptation (rainfall rate) over the Ionian Sea (September 16, 2020).**
+**Figure 5: Surface precipitation (rainfall rate) over the Ionian Sea (September 16, 2020).**
+
+## Training the Artificial Neural Network
+The model is trained using two hidden layers with 10 and 20 perceptrons, respectively. The training data is taken from 10 GMI orbits on March 9, 2014 (i.e. not during Medicane Ianos). Figure 6 plots the learning curves to make sure that there is no overfitting. Note that the curves do not reach asymptotic values, which suggests that further training may yield better results.
+
+![Figure 6: Learning curves from training the ANN model.](/figures/fig6_ann_sea_learning_curves.png)
+
+**Figure 6: Learning curves from training the ANN model.**
+
+## Model Estimations
+The model is given the GMI's 13 channels inputs collected during the Medicane Ianos (mapped in Figures 3 and 4). Figure 7 shows the model's output in estimating the surface precipitation. Comparing with the expected values previously mapped in Figure 5 reveals that the model under-estimates the surface precipitation. However, inaccurate predictions are expected considering the small sample size of the training data. The estimates are still useful in providing some insight into the pattern of the rainfall rate.
+
+![Figure 7: Estimated surface precipitation (rainfall rate) over the Ionian Sea (September 16, 2020).](/figures/fig7_aoi_sea_rr_estimated.png)
+
+**Figure 7: Estimated surface precipitation (rainfall rate) over the Ionian Sea (September 16, 2020).**
+
+## Next Steps / TODO
+- Train a model with GMI and surface precipitation data over land.
+- Run the model to estimate the surface precipitation of Hurricane Ida.
+- Compare the estimates with the the values obtained from the 2B-CMB algorithm.
+- Evaluate the challenges of predicting surface precipitation over land.
 
 ## References
 [1] [ECMWF MOOC Machine Learning in Weather and Climate](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate).
@@ -101,17 +122,22 @@ Download the data products:
 python 00_download_products.py
 ```
 
-Visualize the GMI data on map:
+Map the Medicane Ianos GMI TB data:
 ```bash
 python 01_map_products_gmi.py
 ```
 
-Visualize the precipitation data on map:
+Map the Medicane Ianos surface precipitation data:
 ```bash
 python 02_map_products_precipitation.py
 ```
 
-Train a Multilayer Perceptrons (MLP) Neural Network model that predicts the surface rain rate (RR) given a set 13 channels for Brightness Temperature (TB) measurements.
+Train a model to predict the surface precipitation given the 13 channels for TB measurements:
 ```bash
 python 03_train_sea_ann.py
+```
+
+Use the trained model to predict the surface precipitation during the Medicane Ianos:
+```bash
+python 04_predict_precipitation.py
 ```
