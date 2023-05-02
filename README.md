@@ -10,26 +10,28 @@ The model's estimation over land and coastal areas are not reliable because the 
 
 Note that the models trained in this project use a small training dataset of 10 orbits and are thus unsuitable for operational applications.
 
-The goals of this projects are to:
-1. Familiarize with the [Global Precipitation Measurement Mission (GPM)](https://gpm.nasa.gov/missions/GPM) and the specification of its data products.
+The goals of this project are to:
+1. Become familiarized with the [Global Precipitation Measurement Mission (GPM)](https://gpm.nasa.gov/missions/GPM) and the specification of its data products.
 2. Understand the properties of the [GPM Microwave Imager (GMI)](https://gpm.nasa.gov/missions/GPM/GMI) channel frequencies and how to inrepret them into weather characteristics. For instance, at a central frequency of 36.5 GHz the TB measurements that are colder than background stem from the scattering by large and dense ice (e.g. hail – deep convection) [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
 3. Understand how adding or removing some GMI channels from the training dataset affect the model's predictions. For instance, by removing or only considering the channels at a central frequency of 10.65 GHz since they are more directly impacted by surface precipitation where a TB warmer than background indicates emissions from large raindrops that are present in the lower rain layers [[3](https://doi.org/10.1016/j.atmosres.2022.106174)].
-4. Appreciate the complexities of precipitation retrieval over land and how they hinder our ability to train a neural network for weather and climate predictions over land.
+4. Appreciate the complexities of precipitation retrieval over land and coastal areas as well as how they hinder our ability to train a neural network for weather and climate predictions over these areas.
 
 ## Area of Interest
-Two areas of interest (AOI) are selected to experiment with ANN for precipitation rate estimation over sea and land. The AOI over sea is taken from [[1](https://github.com/ecmwf-projects/mooc-machine-learning-weather-climate)]. The area over land is TBD.
+Two areas of interest (AOI) are selected to experiment with ANN for precipitation rate estimation over sea and land during severe storms. The AOI on sea is over the Ionian Sea. The AOI on land and costal areas is over the US states of Louisiana and Mississippi.
 
 ### Over Sea
-The AOI over sea is the Ionian Sea, as shown in Figure 1. A model will be trained to estimate the surface precipitation that occured during [Cyclone Ianos](https://en.wikipedia.org/wiki/Cyclone_Ianos), a.k.a Medicane Ianos.
+The AOI on sea is the Ionian Sea, as shown in Figure 1. A model will be trained to estimate the surface precipitation that occured during [Cyclone Ianos](https://en.wikipedia.org/wiki/Cyclone_Ianos), a.k.a Medicane Ianos.
 
 ![Figure 1: Area of interest over the Ionian Sea.](./figures/fig1_aoi_ionian_sea.png)
 
 **Figure 1: Area of interest over the Ionian Sea.**
 
-### Over Land
-The AOI over land will be an area in the path of Hurricane Ida's landfall. A model will be trained to estimate the surface precipitation during the hurricane in order to evaluate the challenges of predicting rainfall rate over land.
+### Over Land and Coast
+The AOI on land is in the path of [Hurricane Ida](https://en.wikipedia.org/wiki/Hurricane_Ida)'s landfall, prior to its transition from hurricane to tropical storm. A model will be trained to estimate the surface precipitation rate over the hurricane's land corridor in order to evaluate the challenges of predicting rainfall rate over land and coastal areas.
 
-**Figure 2: TBD.**
+![Figure 2: Area of interest over Hurricane Ida's landfall.](./figures/fig2_aoi_ida_landfall.png)
+
+**Figure 2: Area of interest over US States under Hurricane Ida's landfall.**
 
 ## Mapped Data Products
 Map the measurements taken by the GPM to better understand the data and its distribution across the entire AOI for both TB and surface precipitation measurements. The dataset was collected during Medicane Ianos, which occured on September 16, 2020. This dataset will not be used to train the model but will be used to compare against and evaluate the model's surface precipitation estimations given the same GMI inputs. The training data is taken from 10 GMI orbits on March 9, 2014.

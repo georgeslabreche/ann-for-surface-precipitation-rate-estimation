@@ -32,8 +32,12 @@ MODELS_DIR = "models"
 # the model filename
 MODEL_FILENAME = 'mlp_model.h5'
 
-# lat and lon bounding box bounds for the Ionian Sea on 16/09/2020
-# this are is of interest becasue it captures the Mediterranean Hurricane (Medicane)
-# over the Ionian Sea between Southern Italy and Greece
+# lat and lon bounding box bounds for the Ionian Sea
+# this area is of interest because it captures the Medicane Ianos (a rare Mediterranean hurricane)
 LAT_BOUNDS_IONIAN_SEA = [34, 40]
 LON_BOUNDS_IONIAN_SEA = [14, 22]
+
+# lat and lon bounding box bounds for southern US States near the Gulf of Mexico
+# this area is of interest because it was in the path of Hurricane Ida's landfall
+LAT_BOUNDS_IDA_LANDFALL = [29, 35]
+LON_BOUNDS_IDA_LANDFALL = [-94, -86]
